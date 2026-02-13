@@ -32,6 +32,8 @@ Z0 = float(Z0_input) if Z0_input else 500
 V0_input = input(f"Vaccinated population (default: 0): ").strip()
 V0 = float(V0_input) if V0_input else 0
 
+R0 = 0  # Initial removed population
+
 F0_input = input(f"Food units (default: 2600000): ").strip()
 F0 = float(F0_input) if F0_input else 2_600_000
 
@@ -81,15 +83,16 @@ print("=" * 50)
 
 time = np.arange(0, t_max + 1, dt)
 
-S, E, Z, V, F = S0, E0, Z0, V0, F0
+S, E, Z, V, R, F = S0, E0, Z0, V0, R0, F0
 
-S_list, E_list, Z_list, V_list = [], [], [], []
+S_list, E_list, Z_list, V_list, R_list = [], [], [], [], []
 
 for t in time:
     S_list.append(S)
     E_list.append(E)
     Z_list.append(Z)
     V_list.append(V)
+    R_list.append(R)
 
     # Carrying capacity based on food
     K = K0 * (F / F0)
@@ -102,6 +105,7 @@ for t in time:
     dE = beta * S * Z - sigma * E - mu * E
     dZ = sigma * E - delta * Z
     dV = nu * S - mu * V
+    dR = mu * (S + E + V) + delta * Z
     dF = alpha - beta_f * (S + E + V)
 
     # Euler update
@@ -109,6 +113,7 @@ for t in time:
     E += dE * dt
     Z += dZ * dt
     V += dV * dt
+    R += dR * dt
     F += dF * dt
 
     # Prevent negative values
@@ -127,6 +132,7 @@ plt.plot(time, S_list, label="Susceptible", linewidth=2)
 plt.plot(time, E_list, label="Exposed", linewidth=2)
 plt.plot(time, Z_list, label="Zombies", linewidth=2)
 plt.plot(time, V_list, label="Vaccinated", linewidth=2)
+plt.plot(time, R_list, label="Removed", linewidth=2, linestyle="--")
 
 plt.xlabel("Time (days)", fontsize=12)
 plt.ylabel("Population", fontsize=12)
@@ -134,10 +140,8 @@ plt.title("Zombie Outbreak Simulation", fontsize=14, fontweight='bold')
 plt.legend(fontsize=10)
 plt.grid(True, alpha=0.3)
 
-# Save the figure
-output_file = "zombie_simulation.png"
+output_file = "Zombie_SEZVR_Simulation.png"
 plt.savefig(output_file, dpi=300, bbox_inches='tight')
 print(f"\nGraph saved successfully as '{output_file}'")
 
-# Display the figure
 plt.show()
