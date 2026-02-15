@@ -130,13 +130,13 @@ for t in time:
 plt.figure(figsize=(12, 6))
 plt.plot(time, S_list, label="Susceptible", linewidth=2)
 plt.plot(time, E_list, label="Exposed", linewidth=2)
-plt.plot(time, Z_list, label="Zombies", linewidth=2)
+plt.plot(time, Z_list, label="Zombified", linewidth=2)
 plt.plot(time, V_list, label="Vaccinated", linewidth=2)
 plt.plot(time, R_list, label="Removed", linewidth=2, linestyle="--")
 
 plt.xlabel("Time (days)", fontsize=12)
 plt.ylabel("Population", fontsize=12)
-plt.title("Zombie Outbreak Simulation", fontsize=14, fontweight='bold')
+plt.title("Zombie SEZVR Simulation", fontsize=14, fontweight='bold')
 plt.legend(fontsize=10)
 plt.grid(True, alpha=0.3)
 
